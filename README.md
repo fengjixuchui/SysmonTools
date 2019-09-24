@@ -5,26 +5,28 @@ This repository contains the following:
 
 -   **Sysmon View:** an off-line Sysmon log visualization tool.
 -   **Sysmon Shell:** a Sysmon configuration utility.
+-   **Sysmon Box:** a Sysmon and Network capture logging utility.
 
 # Content
 
 -   Release Notes
 -   Sysmon View
 -   Sysmon Shell
+-   Sysmon Box
 -   Additional Resources
 -   License
 
 # Release Notes
 
--   There are 32 and 64-bit builds (32.zip and 64.zip)
--   All executables are **digitally signed**
--   Sysmon Tools **ARE FREE**
+-   Sysmon View: Version 3.1 can import and correlate network trace capture with Sysmon network event
+-   Sysmon Box: New command line utility to capture Sysmon and network events (v1.0)
+-   Sysmon Shell: Added a command to upgrade configuration files to V9.0 (temporary solution)
 
 # Sysmon View
 
 Sysmon View helps in tracking and visualizing Sysmon logs by logically grouping and correlating the various Sysmon events together, using existing events data, such as executables names, session GUIDs, event creation time, etc., the tool then re-arranges this data for display into multiple views
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/1.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/1.png "Sysmon View")
 
 **Getting Started**
 
@@ -40,52 +42,42 @@ Each time a new XML file is imported, the database file will be deleted and re-c
 
 The database can be used directly in your own applications too, the database contains summaries of hashes, executables, IP addresses, geo mappings and all are logically linked through a file name or a session (executable GUID).
 
-**Hint**: _You can query the database file directly using any SQLite management software without the need for Sysmon View, for example, to generate reports or analyze data_
-
-**Experimental - Sysmon View and Elasticsearch**
-
-Sysmon View version 1.5 can import Sysmon events from Elasticsearch. To get started, configure Winlogbeat to log Sysmon events to an Elasticsearch instance and create an index for "winlogbeats-*", then use the new Elasticsearch import command from the "File" menu. Good reference to this setup can be found [here](https://cyberwardog.blogspot.ae/2017/02/setting-up-pentesting-i-mean-threat_87.html).
-
-This feature is currently in testing for several reasons:
-
-*  The previous setup might be different than what is being adopted by others
-*  Importing logs from Elasticsearch might impact the performance of the logs "visualization", this is still being tested
-*  Connectivity to Elasticsearch needs to be "securely" improved (for example add support to SSL, X-Pack, etc...)
+_You can query the database file directly using any SQLite management software without the need for Sysmon View, for example, to generate reports or analyze data_
 
 **Sysmon Views**
 
 **Process View** this view simply helps focus on a summary of "run sessions", for example, the analyst can start with executable name (such as cmd.exe) or event type (such as Network event), from there, further filtering can be applied, for example, finding running sessions originating for the same binary, but from different locations. This view utilizes the process GUID to filter events per session "run", selecting any running session (from the list of GUIDs) will show all other related (correlated) events in a simple data-flow-like view, sorted using the time of the event.
 _Note: in case data is being imported from an Elasticsearch instance instead of single machine, events can be arranged per executable per machine - check previous section **"Experimental - Sysmon View and Elasticsearch"**)._
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/1_5.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/1_5.png "Sysmon View")
 
 Access to Sysmon event details is provided by simply double-clicking any event in the view, for example, the previous screen capture shows the details of the _Process Creation_ event (event ID 1), the tool also can integrate with VirusTotal upon demand for further hash and IP lookup (Needs an API key registration).
 
 **Map View** : During the events import process, there is an option to geo-locate IP addresses, if set, Sysmon View will try to geo-map **Network Destinations** using https://ipstack.com/ service.
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/2.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/2.png "Sysmon View")
 
 In **map view**, it is easy to navigate between correlated (related) events by using a _network event_ as a starting point, again, the tool is able to achieve this using the running process session GUID. To explore related events, use the hyperlinks for the session GUID, a new view similar to **process view** will show up in a new window with all related session events:
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/2_5.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/2_5.png "Sysmon View")
 
 **All Events View** can also be used to do a _full search_ through all Sysmon collected events data, it also helps in viewing events that do not relate to other events, such as the "Driver Loaded" event type. Navigation between related events is still provided using the process GUID in addition to event details by clicking on _FID link_
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/3.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/3.png "Sysmon View")
 
 Additionally, The **All Events View** supports pivot-like (grouping) arrangement of events, by machine name, event type or GUID, as shown below
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/4.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/4.png "Sysmon View")
 
 Multiple grouping levels are also possible
 
-![Sysmon View](https://nosecurecode.blog/wp-content/uploads/2018/07/5.png "Sysmon View")
+![Sysmon View](https://nosecurecode.com/wp-content/uploads/2018/07/5.png "Sysmon View")
 
 # Sysmon Shell
 
 Sysmon Shell can aid in writing and applying Sysmon XML configurations through a simple GUI interface.
 
-![Sysmon Shell](https://nosecurecode.blog/wp-content/uploads/2017/11/HeadImageSysmonShell.png "Sysmon Shell")
+![Sysmon Shell](https://nosecurecode.com/wp-content/uploads/2017/11/HeadImageSysmonShell.png "Sysmon Shell")
 
 Sysmon Shell can also be used to explore the various configuration options available to Sysmon, easily apply and update XML configuration, in addition to exporting Sysmon events logs, in a nutshell:
 
@@ -100,9 +92,25 @@ Sysmon Shell can also be used to explore the various configuration options avail
 * The utility has descriptions for all events types taken from Sysmon Sysinternals home page (https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon)
 * Sysmon Shell comes _bundled_ with many Sysmon configuration templates created by other security professionals
 
-![Sysmon Shell Templates](https://nosecurecode.blog/wp-content/uploads/2017/12/SysmonShellTemplates.png "Sysmon Shell Templates")
+![Sysmon Shell Templates](https://nosecurecode.com/wp-content/uploads/2017/12/SysmonShellTemplates.png "Sysmon Shell Templates")
 
 **What it won’t do**: warn you about Include/Exclude conflicts or attempt to validate the rules itself, however, once the configuration is applied, the preview pane will display the output captured from Sysmon.exe when configuration is applied (the output of `Sysmon -c command`), from which errors can be identified
+
+# Sysmon Box
+
+Sysmon Box is a small utility that can aid in building a database of captured Sysmon and Network traffic.
+
+![Sysmon Box](https://nosecurecode.com/wp-content/uploads/2019/06/5_6_JUN_2019.png "Sysmon Box")
+
+To run Sysmon Box, use the following command (Sysmon needs to be up and running along with tshark):
+
+`SysmonBox -in Wi-Fi`
+
+The tool then will carry out the following:
+
+* Start capturing traffic (using tshark in the background, this is why you must specify the capture interface), when done, hit CTRL + C to end the session
+* Sysmon Box will then stop traffic capture, dump all captured packets to a file and export Sysmon logs recorded between the start and end time of the session using EVT utility
+* Build a Sysmon View database (backup existing) file with imported logs from Sysmon and captured traffic, all you have to do is to run Sysmon view from the same folder or put the database file (SysmonViewDB) in the same folder as Sysmon View (keep the packet captures in the same location)
 
 # Additional Resources
 
@@ -112,19 +120,13 @@ Sysmon Shell can also be used to explore the various configuration options avail
 # License
 
 ```
-Copyright 2018 Nader Shalabi. All rights reserved. 
+Copyright 2018 Nader Shallabi. All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided
-that the following conditions are met: 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-   the following disclaimer. 
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-   and the following disclaimer in the documentation and/or other materials provided with the 
-   distribution. 
+SYSMON TOOLS CAN BE COPIED AND/OR DISTRIBUTED WITHOUT ANY EXPRESS PERMISSION OF NADER SHALLABI.
 
-THIS SOFTWARE IS PROVIDED BY NADER SHALABI ''AS IS'' AND ANY EXPRESS OR IMPLIED
+THIS SOFTWARE IS PROVIDED BY NADER SHALLABI ''AS IS'' AND ANY EXPRESS OR IMPLIED
 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NADER SHALABI
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NADER SHALLABI
 OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
 OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
@@ -133,5 +135,5 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVE
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 The views and conclusions contained in the software and documentation are those of the authors and
-should not be interpreted as representing official policies, either expressed or implied, of Nader Shalabi.
+should not be interpreted as representing official policies, either expressed or implied, of Nader Shallabi.
 ```
